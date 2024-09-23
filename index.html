@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kiosk Screen</title>
+    <style>
+        /* Style for the body to center content */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            background-color: #5D1725; /* Updated background color */
+        }
+
+        /* Container for the logo */
+        .logo-container {
+            margin-top: 20px;
+        }
+
+        /* Logo styling */
+        .logo {
+            max-width: 500px; /* Adjust the size as needed */
+            padding-bottom: 100px;
+            height: auto;
+        }
+
+        /* Container for the cards */
+        .card-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px; /* Space between logo and cards */
+            flex-grow: 1;
+        }
+
+        /* Style for each card */
+        .card {
+            width: 200px;
+            height: 150px;
+            margin: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            transition: transform 0.2s;
+            color: #000; /* Text color */
+        }
+
+        /* Hover effect for cards */
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        /* Overlay for the video */
+        #video-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 1000;
+        }
+
+        /* Video styling */
+        #video-overlay video {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Close button styling */
+        #close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            font-size: 30px;
+            font-weight: bold;
+            color: #000;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        /* Close button hover effect */
+        #close-button:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Container for the logo -->
+    <div class="logo-container">
+        <img src="msstate_vertical_white_large.png" alt="Logo" class="logo">
+    </div>
+
+    <!-- Container for the cards -->
+    <div class="card-container">
+        <div class="card" onclick="playVideo('HPC.mp4')">HPC</div>
+        <div class="card" onclick="playVideo('CAVS.mp4')">CAVS</div>
+        <div class="card" onclick="playVideo('Raspet.mp4')">Raspet</div>
+        <div class="card" onclick="playVideo('ACImin.mp4')">ACI</div>
+    </div>
+
+    <!-- Overlay for the video player -->
+    <div id="video-overlay">
+        <button id="close-button" onclick="closeVideo()">×</button>
+        <video id="video-player"></video>
+    </div>
+
+    <!-- JavaScript to handle video playback -->
+    <script>
+        function playVideo(src) {
+            var videoOverlay = document.getElementById('video-overlay');
+            var videoPlayer = document.getElementById('video-player');
+
+            // Set the video source
+            videoPlayer.src = src;
+
+            // Display the overlay
+            videoOverlay.style.display = 'block';
+
+            // Play the video
+            videoPlayer.play();
+
+            // When the video ends
+            videoPlayer.onended = function() {
+                closeVideo();
+            };
+        }
+
+        function closeVideo() {
+            var videoOverlay = document.getElementById('video-overlay');
+            var videoPlayer = document.getElementById('video-player');
+
+            // Pause and reset the video
+            videoPlayer.pause();
+            videoPlayer.currentTime = 0;
+            videoPlayer.src = '';
+
+            // Hide the overlay
+            videoOverlay.style.display = 'none';
+
+            // Exit full screen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    </script>
+
+</body>
+</html>
