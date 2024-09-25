@@ -129,14 +129,13 @@
         // Array of video sources
         var videoSources = ['HPC.mp4', 'CAVS.mp4', 'Raspet.mp4', 'ACImin.mp4', 'CCEmin.mp4'];
         var currentVideoIndex = 0;
-        var videoLoopTimeout;
-        var restartTimeout;
         var isLooping = false;
+        var restartTimeout;
 
         var videoOverlay = document.getElementById('video-overlay');
         var videoPlayer = document.getElementById('video-player');
 
-        // Function to play all videos in a loop
+        // Function to play all videos in a loop starting from currentVideoIndex
         function playVideoLoop() {
             isLooping = true;
             // Display the overlay
@@ -168,6 +167,9 @@
             cancelLoop();
             clearTimeout(restartTimeout);
 
+            // Set currentVideoIndex to the index of the selected video
+            currentVideoIndex = videoSources.indexOf(src);
+
             // Set the video source
             videoPlayer.src = src;
 
@@ -179,9 +181,10 @@
             // Play the video
             videoPlayer.play();
 
-            // When the video ends
+            // When the video ends, start the loop from the next video
             videoPlayer.onended = function() {
-                closeVideo();
+                currentVideoIndex = (currentVideoIndex + 1) % videoSources.length;
+                playVideoLoop();
             };
         }
 
@@ -200,26 +203,20 @@
 
             // Cancel looping
             isLooping = false;
-            // Clear any ongoing timeouts
-            clearTimeout(videoLoopTimeout);
 
-            // Wait one minute before restarting the video loop
+            // Clear any ongoing timeouts
+            clearTimeout(restartTimeout);
+
+            // Wait 5 seconds before restarting the video loop from the next video
             restartTimeout = setTimeout(function() {
-                currentVideoIndex = 0; // Reset to the first video
                 playVideoLoop();
-            }, 60000); // 60000 milliseconds = 1 minute
+            }, 5000); // 5000 milliseconds = 5 seconds
         }
 
         // Function to cancel the loop
         function cancelLoop() {
             isLooping = false;
-            clearTimeout(videoLoopTimeout);
         }
-
-        // Start the video loop when the page loads
-        window.onload = function() {
-            playVideoLoop();
-        };
     </script>
 
 </body>
